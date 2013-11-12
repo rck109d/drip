@@ -1,0 +1,35 @@
+<html>
+	<body bgcolor="#000" style="margin:0;color:white">
+		<canvas id="canvas" width="50" height="50" style="border: 1px solid white;cursor:crosshair"></canvas>
+		<br />
+		<span>Num. Sprinklers: </span>
+		<span id="numSprinklers">0</span>
+		<span>&nbsp;Num. Drops: </span>
+		<span id="numDrops"></span>
+		<span id="paused" style="display:none;"> - PAUSED -</span>
+		<br />
+		<fieldset style="width:300px; display: inline;">
+			<legend>Tool</legend>
+			<fieldset id="chooseAction">
+				<legend>Action - <span id="activeAction">draw</span></legend>
+				<button id="buttonDraw">draw</button>
+				<button id="buttonErase">erase</button>
+				<button id="buttonSprinkler">sprinkler</button>
+			</fieldset>
+			<fieldset id="chooseShape">
+				<legend>Shape - <span id="activeShape">block pencil</span></legend>
+				<button id="buttonPencil">block pencil</button>
+				<button id="buttonRectangle">rectangle</button>
+			</fieldset>
+		</fieldset>
+		<fieldset style="width:300px; display: inline;">
+			<legend>Special</legend>
+			<button id="buttonSprinklerReset">sprinkler reset</button>
+			<button id="buttonFreeze">freeze</button>
+			<button id="buttonUnderground">underground/overground</button>
+			<button id="buttonPausePlay">Pause/Play</button>
+			<button id="buttonRandomLine">Random Line</button>
+		</fieldset>
+		<script src="drip.js"></script>
+	</body>
+</html>
