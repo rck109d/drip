@@ -1,22 +1,23 @@
 /*  */
 ;(function(){
-	var canvas = document.getElementById('canvas');
-	canvas.width = document.width-20
-	canvas.height = document.height-200
-	var ctx = canvas.getContext('2d');
+	"use strict";
+	var canvas = document.getElementById("canvas");
+	canvas.width = document.body.clientWidth-20;
+	canvas.height = document.body.clientHeight-200;
+	var ctx = canvas.getContext("2d");
 	var screenScale = 5;
 	ctx.fillStyle = "rgb(0, 0, 255)";
-	var numDrops = document.getElementById('numDrops');
+	var numDrops = document.getElementById("numDrops");
 	var w=Math.floor(canvas.width/screenScale), h=Math.floor(canvas.height/screenScale);
 
 	var hitIndex = [];
 	for(var y=0; y<h; y++) {
 		hitIndex.push(new Array(w));
 	}
-
+	
 	var drops = [];
 	var sprinklers = [];
-
+	
 	function mainLoop() {
 		sprinklers.forEach(function(sprinkler) {
 			var x = sprinkler.x-5+Math.round(Math.random()*10);
@@ -26,7 +27,7 @@
 					drops.push({x:x, y:y, dx:0,dy:0});
 				}
 			}
-		})
+		});
 
 		drops.forEach(function(drop) {
 			ctx.clearRect (drop.x*screenScale, drop.y*screenScale, screenScale, screenScale);
@@ -56,7 +57,7 @@
 				drop.x+=xx;
 			}
 
-			drop.dy += 1
+			drop.dy += 1;
 			var yy=0;
 			var yDirection = drop.dy>0?1:-1;
 			while(yy != drop.dy) {
@@ -66,7 +67,7 @@
 					break;
 				}
 				if(hitIndex[checkY][drop.x]===1) {
-					drop.dy = 0
+					drop.dy = 0;
 					//the below code would allow a random bounceback from 20%-80%
 					//drop.dy = -Math.round(drop.dy*(0.2+Math.random()*0.6));
 					if(drop.dx === 0) {
@@ -80,29 +81,29 @@
 
 			hitIndex[oldY][oldX]=0;
 			if(toKill){
-				drops.splice(i,1)
+				drops.splice(i,1);
 				i--;
 			} else {
 				ctx.fillRect (drop.x*screenScale, drop.y*screenScale, screenScale, screenScale);
 				hitIndex[drop.y][drop.x]=1;
 			}
 		}
-		numDrops.innerHTML = drops.length
+		numDrops.innerHTML = drops.length;
 	}
 
 	function onSprinklersChange() {
-		document.getElementById('numSprinklers').innerHTML = sprinklers.length;
+		document.getElementById("numSprinklers").innerHTML = sprinklers.length;
 	}
 
 	function togglePlay() {
-		var pausedElement = document.getElementById('paused');
+		var pausedElement = document.getElementById("paused");
 		if(togglePlay.interval) {
 			clearInterval(togglePlay.interval);
 			delete togglePlay.interval;
-			pausedElement.style.display = '';
+			pausedElement.style.display = "";
 		} else {
 			togglePlay.interval = setInterval(function(){mainLoop();}, 24);
-			pausedElement.style.display = 'none';
+			pausedElement.style.display = "none";
 		}
 	}
 	togglePlay(); // get things started
@@ -123,20 +124,20 @@
 	}
 
 	function randomLine() {
-		var x1=Math.round(Math.random()*w)
-		var y1=Math.round(Math.random()*h)
-		var x2=Math.round(Math.random()*w)
-		var y2=Math.round(Math.random()*h)
+		var x1=Math.round(Math.random()*w);
+		var y1=Math.round(Math.random()*h);
+		var x2=Math.round(Math.random()*w);
+		var y2=Math.round(Math.random()*h);
 		
-		var diffX = x2-x1
-		var diffY = y2-y1
+		var diffX = x2-x1;
+		var diffY = y2-y1;
 
-		var stepRunX=0, stepRunY=0, stepRiseX=0, stepRiseY=0, stepRunLength=0, stepRiseLength=0
+		var stepRunX=0, stepRunY=0, stepRiseX=0, stepRiseY=0, stepRunLength=0, stepRiseLength=0;
 		if(Math.abs(diffX) > Math.abs(diffY)) {
-			stepRunX = diffX>0?1:-1
+			stepRunX = diffX>0?1:-1;
 			//stepRunY = 
 		} else {
-			stepRunY = diffY>0?1:-1
+			stepRunY = diffY>0?1:-1;
 		}
 
 
@@ -150,8 +151,8 @@
 	var oldMouseY = null;
 
 	canvas.addEventListener("mousedown", function (e) {
-		var x = Math.round(e.x/screenScale);
-		var y = Math.round((e.y+window.pageYOffset)/screenScale);
+		var x = Math.round(e.clientX/screenScale);
+		var y = Math.round((e.clientY+window.pageYOffset)/screenScale);
 		if(mouseMode===1 || mouseMode===2) {
 			mousePainting = true;
 			if(mouseModeStyle===2) {
@@ -198,8 +199,8 @@
 	}
 
 	canvas.addEventListener("mousemove", function (e) {
-		var x = Math.round(e.x/screenScale);
-		var y = Math.round((e.y+window.pageYOffset)/screenScale);
+		var x = Math.round(e.clientX/screenScale);
+		var y = Math.round((e.clientY+window.pageYOffset)/screenScale);
 		if(mousePainting && mouseModeStyle===1) {
 			if(x>=0 && x<w && y>=0 && y<h){
 				if(oldMouseX==null || oldMouseY == null) {
@@ -216,28 +217,28 @@
 	}, false);
 
 	var buttonHandlers = {
-		'buttonDraw': function() {
+		"buttonDraw": function() {
 			mouseMode = 1;
 		},
-		'buttonErase': function() {
+		"buttonErase": function() {
 			mouseMode = 2;
 		},
-		'buttonSprinkler': function() {
+		"buttonSprinkler": function() {
 			mouseMode = 3;
 		},
-		'buttonSprinklerReset': function() {
+		"buttonSprinklerReset": function() {
 			sprinklers = [];
 			onSprinklersChange();
 		},
-		'buttonFreeze': function() {
+		"buttonFreeze": function() {
 			ctx.fillStyle = "rgb(128, 128, 255)";
 			drops.forEach(function(drop) {
 				ctx.fillRect (drop.x*screenScale, drop.y*screenScale, screenScale, screenScale);
-			})
+			});
 			ctx.fillStyle = "rgb(0, 0, 255)";
 			drops = [];
 		},
-		'buttonUnderground': function buttonUnderground() {
+		"buttonUnderground": function buttonUnderground() {
 			buttonUnderground.fill = !buttonUnderground.fill;
 			var indexVal;
 			ctx.fillStyle = "rgb(255, 00, 00)";
@@ -256,37 +257,39 @@
 			}
 			ctx.fillStyle = "rgb(0, 0, 255)";
 		},
-		'buttonRectangle': function() {
+		"buttonRectangle": function() {
 			mouseModeStyle=2;
 		},
-		'buttonPencil': function() {
+		"buttonPencil": function() {
 			mouseModeStyle=1;
 		},
-		'buttonPausePlay': function() {
+		"buttonPausePlay": function() {
 			togglePlay();
-		},
-		'buttonRandomLine': function() {
+		}/*,
+		"buttonRandomLine": function() {
 			randomLine();
-		}
+		}*/
 	};
 
 	Object.keys(buttonHandlers).forEach(function(key){
 		(function(){
-			var element = document.getElementById(key)
-			element.onclick = function() {
-				var selection = element.innerHTML;
-				var parentId = element.parentNode.id;
-				var selectionReceiver = null;
-				if(parentId === 'chooseAction') {
-					selectionReceiver = 'activeAction';
-				} else if (parentId === 'chooseShape') {
-					selectionReceiver = 'activeShape';
-				}
-				if(selectionReceiver !== null) {
-					document.getElementById(selectionReceiver).innerHTML = selection;
-				}
-				buttonHandlers[key]();
-			};
+			var element = document.getElementById(key);
+			if(element) {
+				element.onclick = function() {
+					var selection = element.innerHTML;
+					var parentId = element.parentNode.id;
+					var selectionReceiver = null;
+					if(parentId === "chooseAction") {
+						selectionReceiver = "activeAction";
+					} else if (parentId === "chooseShape") {
+						selectionReceiver = "activeShape";
+					}
+					if(selectionReceiver !== null) {
+						document.getElementById(selectionReceiver).innerHTML = selection;
+					}
+					buttonHandlers[key]();
+				};
+			}
 		})();
 	});
 })();
