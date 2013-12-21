@@ -108,7 +108,7 @@
 	}
 	togglePlay(); // get things started
 
-	function mousePaint(x,y) {
+	function paint(x,y) {
 		if(x<0||x>=w||y<0||y>=h) {
 			return;
 		}
@@ -124,24 +124,35 @@
 	}
 
 	function randomLine() {
+		var x0=Math.round(Math.random()*w);
+		var y0=Math.round(Math.random()*h);
 		var x1=Math.round(Math.random()*w);
 		var y1=Math.round(Math.random()*h);
-		var x2=Math.round(Math.random()*w);
-		var y2=Math.round(Math.random()*h);
-		
-		var diffX = x2-x1;
-		var diffY = y2-y1;
-
-		var stepRunX=0, stepRunY=0, stepRiseX=0, stepRiseY=0, stepRunLength=0, stepRiseLength=0;
-		if(Math.abs(diffX) > Math.abs(diffY)) {
-			stepRunX = diffX>0?1:-1;
-			//stepRunY = 
-		} else {
-			stepRunY = diffY>0?1:-1;
+		//Bresenham line algorithm
+		var dx=Math.abs(x1-x0);
+		var dy=Math.abs(y1-y0);
+		var sx=x0<x1?1:-1;
+		var sy=y0<y1?1:-1;
+		var err=dx-dy;
+		while(true) {
+			paint(x0,y0);
+			if(x0==x1&&y0==y1) { break; }
+			var e2=2*err;
+			if (e2>-dy){
+				x0+=sx;
+				err-=dy;
+			}
+			if(x0==x1&&y0==y1) {
+				paint(x0,y0);
+				break;
+			}
+			if(e2<dx) {
+				y0+=sy;
+				err+=dx;
+			}
 		}
-
-
 	}
+	window.randomLine = randomLine;
 
 	var mouseMode = 1; // 1-draw, erase, sprinkler
 	var mouseModeStyle = 1; // 1-pencil, 2-rectangle
@@ -158,7 +169,7 @@
 			if(mouseModeStyle===2) {
 				drawRectFirstPos = {x:x, y:y};
 			} else {
-				mousePaint(x,y);
+				paint(x, y);
 			}
 		} else if(mouseMode===3) {
 			sprinklers.push({x:x, y:y});
@@ -193,7 +204,7 @@
 		var maxY = Math.max(y1, y2);
 		for(var xx=minX; xx<=maxX; xx++) {
 			for(var yy=minY; yy<=maxY; yy++) {
-				mousePaint(xx,yy);
+				paint(xx, yy);
 			}
 		}
 	}
@@ -203,7 +214,7 @@
 		var y = Math.round((e.clientY+window.pageYOffset)/screenScale);
 		if(mousePainting && mouseModeStyle===1) {
 			if(x>=0 && x<w && y>=0 && y<h){
-				if(oldMouseX==null || oldMouseY == null) {
+				if(oldMouseX===null || oldMouseY===null) {
 					oldMouseX = x;
 					oldMouseY = y;
 				}
@@ -265,10 +276,10 @@
 		},
 		"buttonPausePlay": function() {
 			togglePlay();
-		}/*,
+		},
 		"buttonRandomLine": function() {
 			randomLine();
-		}*/
+		}
 	};
 
 	Object.keys(buttonHandlers).forEach(function(key){
