@@ -1,0 +1,16 @@
+apply plugin: 'groovy'
+apply plugin: 'application'
+apply plugin: 'eclipse'
+
+version = '1.0'
+sourceCompatibility = 1.7
+mainClassName = 'server.Main'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.2.1'
+    compile 'com.sparkjava:spark-core:1.1.1'
+}
